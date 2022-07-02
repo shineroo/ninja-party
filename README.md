@@ -1,2 +1,2 @@
 # ninja-party
- unity ninja game
+ unity fighting game
