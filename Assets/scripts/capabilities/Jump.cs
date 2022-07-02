@@ -37,10 +37,12 @@ namespace Assets.scripts.capabilities
         {
             _onGround = _ground.GetOnGround();
             _velocity = _body.velocity;
+                // to preserve x velocity
 
             if (_onGround)
             {
                 _jumpPhase = 0;
+                    // jump phase is for doublejumps btw
             }
 
             if (_desiredJump)
@@ -48,13 +50,17 @@ namespace Assets.scripts.capabilities
                 _desiredJump = false;
                 JumpAction();
             }
-
+            
+            // variable jump height
             if (_body.velocity.y > 0 && _jumpRelease)
             {
                 _velocity.y = 0;
             }
+
             _jumpRelease = false;
             _body.velocity = _velocity;
+                // i do this in both jump and move and idk if that retarded
+                // it does work pretty well though, move manages x, jump manages y.
         }
         private void JumpAction()
         {
@@ -67,3 +73,29 @@ namespace Assets.scripts.capabilities
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

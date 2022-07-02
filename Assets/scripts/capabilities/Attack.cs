@@ -13,16 +13,14 @@ public class Attack : MonoBehaviour
     private float _attackTimer;
     private float _attackSpeed;
     private bool _desiredAttack;
+    // private int _frameDelay;     for animation startup to avoid every move being frame 1
+    // (because not every animation hits frame 1) (though idk if thats an issue) (yet)
     
     public LayerMask EnemyMask;
 
     [SerializeField] public Transform attackPos;
     [SerializeField] public Vector2 hitboxSize;
 
-    public int damage = 2;
-    
-    
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -52,10 +50,7 @@ public class Attack : MonoBehaviour
             if (playersToDamage[i].gameObject.name != this.gameObject.name)
             {
                 Debug.Log(playersToDamage[i].gameObject.name);
-                // playersToDamage[i].GetComponent<Player>.Damage(damage);
-                // it should launch the player
-                // and if the player is launched and damage is 1 it should relaunch them(?)
-                // and if the player is launched and damage is 2 it should kill them
+                playersToDamage[i].gameObject.GetComponent<Player>().Damage(1);
             }
         }
     }

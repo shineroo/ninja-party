@@ -35,15 +35,15 @@ public class Move : MonoBehaviour
     void Update()
     {
         _direction.x = _controller.RetrieveMoveInput();
-        _desiredVelocity = new Vector2(_direction.x, 0f) * Mathf.Max(_maxSpeed - _ground.GetFriction(), 0);
+        _desiredVelocity = new Vector2(_direction.x, 0f) * Mathf.Max(_maxSpeed, 0);
     }
 
     void FixedUpdate()
     {
         _onGround = _ground.GetOnGround();
-        _acceleration = _onGround ? _maxAcceleration : _maxAirAcceleration;
+        _acceleration = _onGround ? _maxAcceleration : _maxAirAcceleration; // redundant cause i set them both to the same value but whatever
         _maxSpeedChange = _acceleration * Time.deltaTime;
-        _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange);
+        _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange); // no idea how this works
         _velocity.y = _body.velocity.y;
         
         _body.velocity = _velocity;
