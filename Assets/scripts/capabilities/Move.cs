@@ -6,39 +6,46 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
-    [SerializeField] private InputController input = null;
-    [SerializeField] private float maxSpeed = 4f;
-    [SerializeField] private float maxAcceleration = 20f;
-    [SerializeField] private float maxAirAceeleration = 14f;
-
-    private Vector2 direction;
-    private Vector2 desiredVelocity;
-    private Vector2 velocity;
-    private Rigidbody2D body;
-    private Ground ground;
-
-    private float maxSpeedChange;
-    private float acceleration;
-    private bool onGround;
+    [SerializeField] private PlayerController _controller;
     
+    private Rigidbody2D _body;
+    private Ground _ground;
+    private bool _onGround;
+
+    // ========= WALK
+    [SerializeField] private float _maxSpeed = 4f;
+    [SerializeField] private float _maxAcceleration = 20f;
+    [SerializeField] private float _maxAirAcceleration = 14f;
+
+    private Vector2 _direction;
+    private Vector2 _desiredVelocity;
+    private Vector2 _velocity;
+
+    private float _maxSpeedChange;
+    private float _acceleration;
+
+
     void Awake()
     {
-        body = GetComponent<Rigidbody2D>();
-        ground = GetComponent<Ground>();
+        _body = GetComponent<Rigidbody2D>();
+        _ground = GetComponent<Ground>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        direction.x = input.RetrieveMoveInput();
-        desiredVelocity = new Vector2(direction.x, 0f) * Mathf.Max(maxSpeed - ground.GetFriction(), 0f);
-
-        acceleration = onGround ? maxAcceleration : maxAirAceeleration;
-        maxSpeedChange = acceleration * Time.deltaTime;
-        velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
-
-        body.velocity = velocity;
+        _direction.x = _controller.RetrieveMoveInput();
+        _desiredVelocity = new Vector2(_direction.x, 0f) * Mathf.Max(_maxSpeed - _ground.GetFriction(), 0);
     }
-    
-    
+
+    void FixedUpdate()
+    {
+        _onGround = _ground.GetOnGround();
+        _acceleration = _onGround ? _maxAcceleration : _maxAirAcceleration;
+        _maxSpeedChange = _acceleration * Time.deltaTime;
+        _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange);
+        _velocity.y = _body.velocity.y;
+        
+        _body.velocity = _velocity;
+    }
 }

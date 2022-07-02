@@ -14,5 +14,15 @@ namespace Assets.scripts.controllers
         {
             return Input.GetButtonDown("Jump");
         }
+
+        public override bool RetrieveJumpRelease()
+        {
+            return Input.GetButtonUp("Jump");
+        }
+
+        public bool RetrieveAttackInput()
+        {
+            return Input.GetButtonDown("Fire1");
+        }
     }
 }
