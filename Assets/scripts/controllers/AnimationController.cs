@@ -11,12 +11,14 @@ public class AnimationController : MonoBehaviour
     private Ground _ground;
     private Rigidbody2D _body;
     private Animator _animator;
+    private Player _player;
     
     private Vector2 _direction;
     [SerializeField]private bool facingRight = true;
     private bool _onGround;
     private bool _attacking;
     private bool _jumping;
+    private bool _stunned;
 
     [SerializeField] private string _currentState = Idle;
     // Animation states
@@ -29,6 +31,7 @@ public class AnimationController : MonoBehaviour
     private const string Attack1 = "attack1";
     private const string Attack2 = "attack2";
     private const string Throw = "throw";
+    private const string Launch = "launch";
     
     // Start is called before the first frame update
     void Start()
@@ -36,6 +39,7 @@ public class AnimationController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _body = GetComponent<Rigidbody2D>();
         _ground = GetComponent<Ground>();
+        _player = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -44,64 +48,74 @@ public class AnimationController : MonoBehaviour
         _direction.x = _controller.RetrieveMoveInput();
         _onGround = _ground.GetOnGround();
         _jumping |= _controller.RetrieveJumpInput();
+        _stunned = _player.isStunned();
     }
 
     void FixedUpdate()
     {
-        // Flip player
-        if (_direction.x < 0 && facingRight)
+        if (!_stunned)
         {
-            transform.localScale = new Vector3(-1, 1, 1);   
-                // this is wrong if you ever want to scale your ninjas
-            facingRight = false;
-        }
-        if (_direction.x > 0 && !facingRight)
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-            facingRight = true;
-        }
-        
-        // Run and Idle
-        if (_onGround && _body.velocity.y <= 0)
-        {
-            if (_direction.x != 0)
+            // Flip player
+            if (_direction.x < 0 && facingRight)
             {
-                ChangeAnimationState(Run);
+                transform.localScale = new Vector3(-1, 1, 1);   
+                    // this is wrong if you ever want to scale your ninjas
+                facingRight = false;
             }
-            if (_direction.x == 0)
+            if (_direction.x > 0 && !facingRight)
             {
-                ChangeAnimationState(Idle);
+                transform.localScale = new Vector3(1, 1, 1);
+                facingRight = true;
             }
-        }
-
-        // Jump
-        if (_jumping)
-        {
-            if (!_onGround)
+            
+            // Run and Idle
+            if (_onGround && _body.velocity.y <= 0)
             {
-                switch (Random.Range(1, 3))
+                if (_direction.x != 0)
                 {
-                    case 1:
-                        _animator.Play(DoubleJump1); 
-                        _currentState = DoubleJump1;
-                        break;
-                    case 2:
-                        _animator.Play(DoubleJump2);
-                        _currentState = DoubleJump2;
-                        break;
+                    ChangeAnimationState(Run);
+                }
+                if (_direction.x == 0)
+                {
+                    ChangeAnimationState(Idle);
                 }
             }
-            else
+    
+            // Jump
+            if (_jumping)
             {
-                ChangeAnimationState(Jump);
+                if (!_onGround)
+                {
+                    switch (Random.Range(1, 3))
+                    {
+                        case 1:
+                            _animator.Play(DoubleJump1); 
+                            _currentState = DoubleJump1;
+                            break;
+                        case 2:
+                            _animator.Play(DoubleJump2);
+                            _currentState = DoubleJump2;
+                            break;
+                    }
+                }
+                else
+                {
+                    ChangeAnimationState(Jump);
+                }
+                _jumping = false;
             }
-            _jumping = false;
+            
+            // Fall
+            if (!_onGround && _body.velocity.y < -0.1 && !_stunned) 
+                // -0.1 cause it freaks out when you touch walls if i leave it on 0
+            {
+                ChangeAnimationState(Fall); 
+            }
         }
-
-        if (!_onGround && _body.velocity.y < -0.1) 
-            // -0.1 cause it freaks out when you touch walls if i leave it on 0
+        // Launch
+        else
         {
-            ChangeAnimationState(Fall); 
+            ChangeAnimationState(Launch);
         }
     }
 
@@ -111,5 +125,10 @@ public class AnimationController : MonoBehaviour
         
         _animator.Play(newState);
         _currentState = newState;
+    }
+
+    public bool isFacingRight()
+    {
+        return facingRight;
     }
 }

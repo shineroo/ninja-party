@@ -54,15 +54,17 @@
   <ItemGroup>
      <Compile Include="Assets\scripts\capabilities\Attack.cs" />
      <Compile Include="Assets\scripts\controllers\PlayerController.cs" />
+     <Compile Include="Assets\scripts\checks\Player.cs" />
      <Compile Include="Assets\scripts\controllers\AnimationController.cs" />
      <Compile Include="Assets\z extra\Tarodev 2D Controller\_Scripts\PlayerExtras.cs" />
+     <Compile Include="Assets\scripts\helper\AnimationAutoDestroy.cs" />
      <Compile Include="Assets\z extra\Tarodev 2D Controller\_Scripts\PlayerController.cs" />
      <Compile Include="Assets\scripts\capabilities\Jump.cs" />
      <Compile Include="Assets\z extra\Tarodev 2D Controller\_Scripts\PlayerAnimator.cs" />
      <Compile Include="Assets\scripts\capabilities\Move.cs" />
      <Compile Include="Assets\scripts\checks\Ground.cs" />
      <Compile Include="Assets\scripts\controllers\InputController.cs" />
-     <Compile Include="Assets\scripts\checks\Player.cs" />
+     <Compile Include="Assets\scripts\capabilities\Dash.cs" />
      <None Include="Assets\z extra\Unity2D-Platform-Character-Controller-main\ProjectSettings\ProjectVersion.txt" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
